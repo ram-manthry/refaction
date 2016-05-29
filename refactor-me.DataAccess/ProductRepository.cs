@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.SqlClient;
+using System.Data;
 using refactor_me.Models;
 
 namespace refactor_me.DataAccess
@@ -10,42 +10,56 @@ namespace refactor_me.DataAccess
 
         public Product Get(Guid id)
         {
-            var conn = Helpers.NewConnection();
-            var cmd = new SqlCommand($"select * from product where id = '{id}'", conn);
-            conn.Open();
-
-            var rdr = cmd.ExecuteReader();
-            if (!rdr.Read()) return null;
-
-            var product = new Product()
+            using (var conn = Helpers.NewConnection())
             {
-                Id = Guid.Parse(rdr["Id"].ToString()),
-            Name = rdr["Name"].ToString(),
-            Description = (DBNull.Value == rdr["Description"]) ? null : rdr["Description"].ToString(),
-            Price = decimal.Parse(rdr["Price"].ToString()),
-            DeliveryPrice = decimal.Parse(rdr["DeliveryPrice"].ToString())
-        };
-            return product;
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = $"SELECT Id, Name, Description, Price, DeliveryPrice " +
+                                  $"FROM Product WHERE Id = '{id}'";
+
+                conn.Open();
+
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                {
+                    if (!reader.Read()) return null;
+
+                    var product = new Product
+                    {
+                        Id = reader.GetGuid("Id"),
+                        Name = reader.GetString("Name"),
+                        Description = reader.GetString("Description"),
+                        Price = reader.GetDecimal("Price"),
+                        DeliveryPrice = reader.GetDecimal("DeliveryPrice")
+                    };
+                    return product;
+                }
+            }
         }
 
         public void Create(Product product)
         {
-            var conn = Helpers.NewConnection();
-            var cmd =
-                new SqlCommand(
-                    $"insert into product (id, name, description, price, deliveryprice) values ('{product.Id}', '{product.Name}', '{product.Description}', {product.Price}, {product.DeliveryPrice})",
-                    conn);
-            conn.Open();
-            cmd.ExecuteNonQuery();
+            using (var conn = Helpers.NewConnection())
+            {
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = $"INSERT INTO Product (Id, Name, Description, Price, DeliveryPrice) " +
+                                  $"VALUES ('{product.Id}', '{product.Name}', '{product.Description}', {product.Price}, {product.DeliveryPrice})";
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public void Update(Product product)
         {
-            var conn = Helpers.NewConnection();
-            var cmd = new SqlCommand($"update product set name = '{product.Name}', description = '{product.Description}', price = {product.Price}, deliveryprice = {product.DeliveryPrice} where id = '{product.Id}'", conn);
+            using (var conn = Helpers.NewConnection())
+            {
+                var cmd = conn.CreateCommand();
+                cmd.CommandText =
+                    $"UPDATE Product SET Name = '{product.Name}', Description = '{product.Description}', Price = {product.Price}, DeliveryPrice = {product.DeliveryPrice} " +
+                    $"WHERE Id = '{product.Id}'";
 
-            conn.Open();
-            cmd.ExecuteNonQuery();
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public void Delete(Guid productId)
@@ -54,10 +68,14 @@ namespace refactor_me.DataAccess
             foreach (var option in options.Items)
                 _productOptionRepository.Delete(option.Id);
 
-            var conn = Helpers.NewConnection();
-            conn.Open();
-            var cmd = new SqlCommand($"delete from product where id = '{productId}'", conn);
-            cmd.ExecuteNonQuery();
+            using (var conn = Helpers.NewConnection())
+            {
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = $"DELETE FROM Product WHERE Id = '{productId}'";
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public Products GetAll()
@@ -67,25 +85,31 @@ namespace refactor_me.DataAccess
 
         public Products Get(string name)
         {
-            return LoadProducts($"where lower(name) like '%{name.ToLower()}%'");
+            return LoadProducts($"WHERE LOWER(Name) LIKE '%{name.ToLower()}%'");
         }
 
         private Products LoadProducts(string where)
         {
             var products = new Products();
 
-            var conn = Helpers.NewConnection();
-            var cmd = new SqlCommand($"select id from product {where}", conn);
-            conn.Open();
-
-            var rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            using (var conn = Helpers.NewConnection())
             {
-                var id = Guid.Parse(rdr["id"].ToString());
-                var product = Get(id);
-                products.Items.Add(product);
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = $"SELECT Id FROM Product {where}";
+
+                conn.Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var id = reader.GetGuid("Id");
+                        var product = Get(id);
+                        products.Items.Add(product);
+                    }
+                    return products;
+                }
             }
-            return products;
         }
     }
 }
