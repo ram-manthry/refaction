@@ -74,7 +74,7 @@ namespace refactor_me.Controllers
         [HttpGet]
         public ProductOptions GetOptions(Guid productId)
         {
-            return new ProductOptions(productId);
+            return _productOptionRepository.GetByProductId(productId);
         }
 
         [Route("{productId}/options/{id}")]

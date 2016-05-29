@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace refactor_me.Models
@@ -51,6 +52,24 @@ namespace refactor_me.Models
             conn.Open();
             var cmd = new SqlCommand($"delete from productoption where id = '{id}'", conn);
             cmd.ExecuteReader();
+        }
+
+        public ProductOptions GetByProductId(Guid productId)
+        {
+            var options =new ProductOptions();
+            
+            var conn = Helpers.NewConnection();
+            var cmd = new SqlCommand($"select id from productoption where productid = '{productId}'", conn);
+            conn.Open();
+
+            var rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                var id = Guid.Parse(rdr["id"].ToString());
+                var option = Get(id);
+                options.Items.Add(option);
+            }
+            return options;
         }
     }
 }
