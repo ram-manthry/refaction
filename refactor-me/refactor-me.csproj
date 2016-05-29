@@ -98,6 +98,7 @@
     <Compile Include="Models\Helpers.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductOption.cs" />
+    <Compile Include="Models\ProductRepository.cs" />
     <Compile Include="Models\ProductOptionRepository.cs" />
     <Compile Include="Models\ProductOptions.cs" />
     <Compile Include="Models\Products.cs" />

@@ -39,7 +39,7 @@ namespace refactor_me.IntegrationTests
         {
             //Arrange
             var productId = Guid.NewGuid();
-            var expected = new Product(productId)
+            var expected = new Product()
             {
                 Id = productId,
                 Name = "Dummy Name 1",
@@ -63,7 +63,7 @@ namespace refactor_me.IntegrationTests
         {
             //Arrange
             var productId = Guid.NewGuid();
-            var product = new Product(productId)
+            var product = new Product()
             {
                 Id = productId,
                 Name = "Dummy Name 1",
@@ -89,7 +89,7 @@ namespace refactor_me.IntegrationTests
             //Arrange
             var productId1 = Guid.NewGuid();
             var prouctId2 = Guid.NewGuid();
-            var product1 = new Product(productId1)
+            var product1 = new Product()
             {
                 Id = productId1,
                 Name = "Dummy Name 1",
@@ -97,7 +97,7 @@ namespace refactor_me.IntegrationTests
                 Price = 123.45M,
                 DeliveryPrice = 67.89M
             };
-            var product2 = new Product(prouctId2)
+            var product2 = new Product()
             {
                 Id = prouctId2,
                 Name = "Dummy Name 2",
@@ -124,7 +124,7 @@ namespace refactor_me.IntegrationTests
         {
             //Arrange
             var productId = Guid.NewGuid();
-            var expected = new Product(productId)
+            var expected = new Product()
             {
                 Id = productId,
                 Name = productId.ToString(),
@@ -148,7 +148,7 @@ namespace refactor_me.IntegrationTests
         {
             //Arrange
             var productId = Guid.NewGuid();
-            var product = new Product(productId)
+            var product = new Product()
             {
                 Id = productId,
                 Name = "Dummy Name 1",
