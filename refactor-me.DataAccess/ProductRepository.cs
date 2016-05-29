@@ -13,8 +13,8 @@ namespace refactor_me.DataAccess
             using (var conn = Helpers.NewConnection())
             {
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = $"SELECT Id, Name, Description, Price, DeliveryPrice " +
-                                  $"FROM Product WHERE Id = '{id}'";
+                cmd.CommandText = "SELECT Id, Name, Description, Price, DeliveryPrice FROM Product WHERE Id = @Id";
+                cmd.Parameters.AddWithValue("@Id", id);
 
                 conn.Open();
 
@@ -40,8 +40,13 @@ namespace refactor_me.DataAccess
             using (var conn = Helpers.NewConnection())
             {
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = $"INSERT INTO Product (Id, Name, Description, Price, DeliveryPrice) " +
-                                  $"VALUES ('{product.Id}', '{product.Name}', '{product.Description}', {product.Price}, {product.DeliveryPrice})";
+                cmd.CommandText = "INSERT INTO Product (Id, Name, Description, Price, DeliveryPrice) " +
+                                  "VALUES (@Id, @Name, @Description, @Price, @DeliveryPrice)";
+                cmd.Parameters.AddWithValue("@Id", product.Id);
+                cmd.Parameters.AddWithValue("@Name", product.Name);
+                cmd.Parameters.AddWithValue("@Description", product.Description);
+                cmd.Parameters.AddWithValue("@Price", product.Price);
+                cmd.Parameters.AddWithValue("@DeliveryPrice", product.DeliveryPrice);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
@@ -53,9 +58,12 @@ namespace refactor_me.DataAccess
             using (var conn = Helpers.NewConnection())
             {
                 var cmd = conn.CreateCommand();
-                cmd.CommandText =
-                    $"UPDATE Product SET Name = '{product.Name}', Description = '{product.Description}', Price = {product.Price}, DeliveryPrice = {product.DeliveryPrice} " +
-                    $"WHERE Id = '{product.Id}'";
+                cmd.CommandText = "UPDATE Product SET Name = @Name, Description = @Description, Price = @Price, DeliveryPrice = @DeliveryPrice WHERE Id = @Id";
+                cmd.Parameters.AddWithValue("@Id", product.Id);
+                cmd.Parameters.AddWithValue("@Name", product.Name);
+                cmd.Parameters.AddWithValue("@Description", product.Description);
+                cmd.Parameters.AddWithValue("@Price", product.Price);
+                cmd.Parameters.AddWithValue("@DeliveryPrice", product.DeliveryPrice);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
@@ -71,7 +79,8 @@ namespace refactor_me.DataAccess
             using (var conn = Helpers.NewConnection())
             {
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = $"DELETE FROM Product WHERE Id = '{productId}'";
+                cmd.CommandText = $"DELETE FROM Product WHERE Id = @Id";
+                cmd.Parameters.AddWithValue("@Id", productId);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
@@ -80,22 +89,12 @@ namespace refactor_me.DataAccess
 
         public Products GetAll()
         {
-            return LoadProducts(String.Empty);
-        }
-
-        public Products Get(string name)
-        {
-            return LoadProducts($"WHERE LOWER(Name) LIKE '%{name.ToLower()}%'");
-        }
-
-        private Products LoadProducts(string where)
-        {
             var products = new Products();
 
             using (var conn = Helpers.NewConnection())
             {
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = $"SELECT Id FROM Product {where}";
+                cmd.CommandText = "SELECT Id, Name, Description, Price, DeliveryPrice FROM Product";
 
                 conn.Open();
 
@@ -103,8 +102,45 @@ namespace refactor_me.DataAccess
                 {
                     while (reader.Read())
                     {
-                        var id = reader.GetGuid("Id");
-                        var product = Get(id);
+                        var product = new Product
+                        {
+                            Id = reader.GetGuid("Id"),
+                            Name = reader.GetString("Name"),
+                            Description = reader.GetString("Description"),
+                            Price = reader.GetDecimal("Price"),
+                            DeliveryPrice = reader.GetDecimal("DeliveryPrice")
+                        };
+                        products.Items.Add(product);
+                    }
+                    return products;
+                }
+            }
+        }
+
+        public Products Get(string name)
+        {
+            var products = new Products();
+
+            using (var conn = Helpers.NewConnection())
+            {
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT Id, Name, Description, Price, DeliveryPrice FROM Product WHERE LOWER(Name) LIKE @Name";
+                cmd.Parameters.AddWithValue("@Name", "%"+name+"%");
+
+                conn.Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var product = new Product
+                        {
+                            Id = reader.GetGuid("Id"),
+                            Name = reader.GetString("Name"),
+                            Description = reader.GetString("Description"),
+                            Price = reader.GetDecimal("Price"),
+                            DeliveryPrice = reader.GetDecimal("DeliveryPrice")
+                        };
                         products.Items.Add(product);
                     }
                     return products;

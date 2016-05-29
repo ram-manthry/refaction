@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
 using refactor_me.Models;
 
 namespace refactor_me.DataAccess
@@ -12,8 +11,8 @@ namespace refactor_me.DataAccess
             using (var conn = Helpers.NewConnection())
             {
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = $"SELECT Id, ProductId, Name, Description " +
-                                  $"FROM ProductOption WHERE Id = '{id}'";
+                cmd.CommandText = "SELECT Id, ProductId, Name, Description FROM ProductOption WHERE Id = @Id";
+                cmd.Parameters.AddWithValue("@Id", id);
 
                 conn.Open();
 
@@ -26,7 +25,7 @@ namespace refactor_me.DataAccess
                         Id = reader.GetGuid("Id"),
                         ProductId = reader.GetGuid("ProductId"),
                         Name = reader.GetString("Name"),
-                        Description = reader.GetString("Description"),
+                        Description = reader.GetString("Description")
                     };
                     return option;
                 }
@@ -38,8 +37,12 @@ namespace refactor_me.DataAccess
             using (var conn = Helpers.NewConnection())
             {
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = $"INSERT INTO ProductOption (Id, ProductId, Name, Description) " +
-                                  $"VALUES ('{option.Id}', '{option.ProductId}', '{option.Name}', '{option.Description}')";
+                cmd.CommandText = "INSERT INTO ProductOption (Id, ProductId, Name, Description) " +
+                                  "VALUES (@Id, @ProductId, @Name, @Description)";
+                cmd.Parameters.AddWithValue("@Id", option.Id);
+                cmd.Parameters.AddWithValue("@ProductId", option.ProductId);
+                cmd.Parameters.AddWithValue("@Name", option.Name);
+                cmd.Parameters.AddWithValue("@Description", option.Description);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
@@ -51,8 +54,10 @@ namespace refactor_me.DataAccess
             using (var conn = Helpers.NewConnection())
             {
                 var cmd = conn.CreateCommand();
-                cmd.CommandText =
-                    $"UPDATE ProductOption SET Name = '{option.Name}', Description = '{option.Description}' WHERE Id = '{option.Id}'";
+                cmd.CommandText = "UPDATE ProductOption SET Name = @Name, Description = @Description WHERE Id = @Id";
+                cmd.Parameters.AddWithValue("@Id", option.Id);
+                cmd.Parameters.AddWithValue("@Name", option.Name);
+                cmd.Parameters.AddWithValue("@Description", option.Description);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
@@ -64,7 +69,8 @@ namespace refactor_me.DataAccess
             using (var conn = Helpers.NewConnection())
             {
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = $"DELETE FROM ProductOption WHERE Id = '{id}'";
+                cmd.CommandText = "DELETE FROM ProductOption WHERE Id = @Id";
+                cmd.Parameters.AddWithValue("@Id", id);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
@@ -73,12 +79,13 @@ namespace refactor_me.DataAccess
 
         public ProductOptions GetByProductId(Guid productId)
         {
-            var options =new ProductOptions();
-            
+            var options = new ProductOptions();
+
             using (var conn = Helpers.NewConnection())
             {
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = $"SELECT Id FROM ProductOption WHERE productId = '{productId}'";
+                cmd.CommandText = "SELECT Id FROM ProductOption WHERE productId = @ProductId";
+                cmd.Parameters.AddWithValue("@ProductId", productId);
 
                 conn.Open();
 
