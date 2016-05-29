@@ -4,11 +4,11 @@ using refactor_me.Models;
 
 namespace refactor_me.DataAccess
 {
-    public class ProductOptionRepository : IProductOptionRepository
+    public class ProductOptionRepository : SqlConnectionBase, IProductOptionRepository
     {
         public ProductOption Get(Guid id)
         {
-            using (var conn = Helpers.NewConnection())
+            using (var conn = NewConnection())
             {
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT Id, ProductId, Name, Description FROM ProductOption WHERE Id = @Id";
@@ -34,7 +34,7 @@ namespace refactor_me.DataAccess
 
         public void Create(ProductOption option)
         {
-            using (var conn = Helpers.NewConnection())
+            using (var conn = NewConnection())
             {
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "INSERT INTO ProductOption (Id, ProductId, Name, Description) " +
@@ -51,7 +51,7 @@ namespace refactor_me.DataAccess
 
         public void Update(ProductOption option)
         {
-            using (var conn = Helpers.NewConnection())
+            using (var conn = NewConnection())
             {
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE ProductOption SET Name = @Name, Description = @Description WHERE Id = @Id";
@@ -66,7 +66,7 @@ namespace refactor_me.DataAccess
 
         public void Delete(Guid id)
         {
-            using (var conn = Helpers.NewConnection())
+            using (var conn = NewConnection())
             {
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "DELETE FROM ProductOption WHERE Id = @Id";
@@ -81,7 +81,7 @@ namespace refactor_me.DataAccess
         {
             var options = new ProductOptions();
 
-            using (var conn = Helpers.NewConnection())
+            using (var conn = NewConnection())
             {
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT Id FROM ProductOption WHERE productId = @ProductId";

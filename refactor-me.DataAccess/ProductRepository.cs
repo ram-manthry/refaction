@@ -4,7 +4,7 @@ using refactor_me.Models;
 
 namespace refactor_me.DataAccess
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : SqlConnectionBase,IProductRepository
     {
         private readonly IProductOptionRepository _productOptionRepository;
 
@@ -15,7 +15,7 @@ namespace refactor_me.DataAccess
 
         public Product Get(Guid id)
         {
-            using (var conn = Helpers.NewConnection())
+            using (var conn = NewConnection())
             {
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT Id, Name, Description, Price, DeliveryPrice FROM Product WHERE Id = @Id";
@@ -42,7 +42,7 @@ namespace refactor_me.DataAccess
 
         public void Create(Product product)
         {
-            using (var conn = Helpers.NewConnection())
+            using (var conn = NewConnection())
             {
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "INSERT INTO Product (Id, Name, Description, Price, DeliveryPrice) " +
@@ -60,7 +60,7 @@ namespace refactor_me.DataAccess
 
         public void Update(Product product)
         {
-            using (var conn = Helpers.NewConnection())
+            using (var conn = NewConnection())
             {
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE Product SET Name = @Name, Description = @Description, Price = @Price, DeliveryPrice = @DeliveryPrice WHERE Id = @Id";
@@ -81,7 +81,7 @@ namespace refactor_me.DataAccess
             foreach (var option in options.Items)
                 _productOptionRepository.Delete(option.Id);
 
-            using (var conn = Helpers.NewConnection())
+            using (var conn = NewConnection())
             {
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = $"DELETE FROM Product WHERE Id = @Id";
@@ -96,7 +96,7 @@ namespace refactor_me.DataAccess
         {
             var products = new Products();
 
-            using (var conn = Helpers.NewConnection())
+            using (var conn = NewConnection())
             {
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT Id, Name, Description, Price, DeliveryPrice FROM Product";
@@ -126,7 +126,7 @@ namespace refactor_me.DataAccess
         {
             var products = new Products();
 
-            using (var conn = Helpers.NewConnection())
+            using (var conn = NewConnection())
             {
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT Id, Name, Description, Price, DeliveryPrice FROM Product WHERE LOWER(Name) LIKE @Name";

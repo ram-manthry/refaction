@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers.cs" />
+    <Compile Include="SqlConnectionBase.cs" />
     <Compile Include="IProductOptionRepository.cs" />
     <Compile Include="IProductRepository.cs" />
     <Compile Include="ProductOptionRepository.cs" />
