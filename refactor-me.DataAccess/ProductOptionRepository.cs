@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
+using refactor_me.Models;
 
-namespace refactor_me.Models
+namespace refactor_me.DataAccess
 {
     public class ProductOptionRepository
     {

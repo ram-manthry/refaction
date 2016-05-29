@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "refactor-me", "refactor-me\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "refactor-me.IntegrationTests", "refactor-me.IntegrationTests\refactor-me.IntegrationTests.csproj", "{A1C8F1AB-8859-4EB3-82CB-84EE9355026D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "refactor-me.DataAccess", "refactor-me.DataAccess\refactor-me.DataAccess.csproj", "{5C711E7F-D373-4A94-965F-E332EDC6E4EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "refactor-me.Models", "refactor-me.Models\refactor-me.Models.csproj", "{CCB222EE-F17E-42AC-8DBE-23AB556F3243}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{A1C8F1AB-8859-4EB3-82CB-84EE9355026D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1C8F1AB-8859-4EB3-82CB-84EE9355026D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1C8F1AB-8859-4EB3-82CB-84EE9355026D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C711E7F-D373-4A94-965F-E332EDC6E4EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C711E7F-D373-4A94-965F-E332EDC6E4EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C711E7F-D373-4A94-965F-E332EDC6E4EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C711E7F-D373-4A94-965F-E332EDC6E4EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCB222EE-F17E-42AC-8DBE-23AB556F3243}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCB222EE-F17E-42AC-8DBE-23AB556F3243}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCB222EE-F17E-42AC-8DBE-23AB556F3243}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCB222EE-F17E-42AC-8DBE-23AB556F3243}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

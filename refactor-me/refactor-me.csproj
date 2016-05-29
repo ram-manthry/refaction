@@ -95,13 +95,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Helpers.cs" />
-    <Compile Include="Models\Product.cs" />
-    <Compile Include="Models\ProductOption.cs" />
-    <Compile Include="Models\ProductRepository.cs" />
-    <Compile Include="Models\ProductOptionRepository.cs" />
-    <Compile Include="Models\ProductOptions.cs" />
-    <Compile Include="Models\Products.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -113,7 +106,16 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\refactor-me.DataAccess\refactor-me.DataAccess.csproj">
+      <Project>{5C711E7F-D373-4A94-965F-E332EDC6E4EB}</Project>
+      <Name>refactor-me.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\refactor-me.Models\refactor-me.Models.csproj">
+      <Project>{CCB222EE-F17E-42AC-8DBE-23AB556F3243}</Project>
+      <Name>refactor-me.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

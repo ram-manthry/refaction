@@ -73,6 +73,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\refactor-me.DataAccess\refactor-me.DataAccess.csproj">
+      <Project>{5C711E7F-D373-4A94-965F-E332EDC6E4EB}</Project>
+      <Name>refactor-me.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\refactor-me.Models\refactor-me.Models.csproj">
+      <Project>{CCB222EE-F17E-42AC-8DBE-23AB556F3243}</Project>
+      <Name>refactor-me.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\refactor-me\refactor-me.csproj">
       <Project>{20AB69F9-F2D3-4A68-96C3-424EC8B9406E}</Project>
       <Name>refactor-me</Name>

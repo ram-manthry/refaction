@@ -2,7 +2,7 @@
 using System.Data.SqlClient;
 using System.Web;
 
-namespace refactor_me.Models
+namespace refactor_me.DataAccess
 {
     public class Helpers
     {
