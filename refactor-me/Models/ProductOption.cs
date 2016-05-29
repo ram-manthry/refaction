@@ -37,24 +37,7 @@ namespace refactor_me.Models
                 return hashCode;
             }
         }
-
-        public ProductOption()
-        {
-            Id = Guid.NewGuid();
-        }
-
-        public ProductOption(Guid id)
-        {
-            var option = Get(id);
-            if (option == null)
-                return;
-
-            Id = option.Id;
-            ProductId = option.ProductId;
-            Name = option.Name;
-            Description = option.Description;
-        }
-
+        
         public ProductOption Get(Guid id)
         {
             var conn = Helpers.NewConnection();

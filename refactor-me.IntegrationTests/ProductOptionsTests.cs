@@ -37,7 +37,7 @@ namespace refactor_me.IntegrationTests
             //Arrange
             var productId = Guid.NewGuid();
             var optionId = Guid.NewGuid();
-            var expected = new ProductOption(optionId)
+            var expected = new ProductOption()
             {
                 Id = optionId,
                 Name = "Dummy Name 1",
@@ -61,7 +61,7 @@ namespace refactor_me.IntegrationTests
             //Arrange
             var productId = Guid.NewGuid();
             var optionId = Guid.NewGuid();
-            var expected = new ProductOption(optionId)
+            var expected = new ProductOption()
             {
                 Id = optionId,
                 Name = "Dummy Name 1",
@@ -85,7 +85,7 @@ namespace refactor_me.IntegrationTests
             var productId = Guid.NewGuid();
 
             var optionId1 = Guid.NewGuid();
-            var option1 = new ProductOption(optionId1)
+            var option1 = new ProductOption()
             {
                 Id = optionId1,
                 Name = "Dummy Name 1",
@@ -94,7 +94,7 @@ namespace refactor_me.IntegrationTests
             };
 
             var optionId2 = Guid.NewGuid();
-            var option2 = new ProductOption(optionId1)
+            var option2 = new ProductOption()
             {
                 Id = optionId2,
                 Name = "Dummy Name 2",
@@ -122,7 +122,7 @@ namespace refactor_me.IntegrationTests
             //Arrange
             var productId = Guid.NewGuid();
             var optionId = Guid.NewGuid();
-            var option = new ProductOption(optionId)
+            var option = new ProductOption()
             {
                 Id = optionId,
                 Name = "Dummy Name 1",
@@ -150,16 +150,14 @@ namespace refactor_me.IntegrationTests
             //Arrange
             var productId = Guid.NewGuid();
             var optionId = Guid.NewGuid();
-            var option = new ProductOption(optionId)
+            var option = new ProductOption()
             {
                 Id = optionId,
                 Name = "Dummy Name 1",
                 Description = "Dummy Description 1",
                 ProductId = productId
             };
-           
-            _productOptionIds.Add(optionId);
-
+            
             var expected = option;
             expected.Name = "Dummy Name 1 updated";
 

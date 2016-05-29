@@ -108,8 +108,8 @@ namespace refactor_me.Controllers
         [HttpDelete]
         public void DeleteOption(Guid id)
         {
-            var opt = new ProductOption(id);
-            opt.Delete();
+            var optionToDelete = new ProductOption().Get(id);
+            optionToDelete.Delete();
         }
     }
 }

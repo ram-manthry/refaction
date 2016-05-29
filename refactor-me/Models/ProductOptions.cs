@@ -29,7 +29,8 @@ namespace refactor_me.Models
             while (rdr.Read())
             {
                 var id = Guid.Parse(rdr["id"].ToString());
-                Items.Add(new ProductOption(id));
+                var option = new ProductOption().Get(id);
+                Items.Add(option);
             }
         }
     }
