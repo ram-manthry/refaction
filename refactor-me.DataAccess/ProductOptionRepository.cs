@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using refactor_me.Models;
 
@@ -8,68 +9,90 @@ namespace refactor_me.DataAccess
     {
         public ProductOption Get(Guid id)
         {
-            var conn = Helpers.NewConnection();
-            var cmd = new SqlCommand($"select * from productoption where id = '{id}'", conn);
-            conn.Open();
-
-            var rdr = cmd.ExecuteReader();
-            if (!rdr.Read()) return null;
-
-            var option = new ProductOption()
+            using (var conn = Helpers.NewConnection())
             {
-                Id = Guid.Parse(rdr["Id"].ToString()),
-                ProductId = Guid.Parse(rdr["ProductId"].ToString()),
-                Name = rdr["Name"].ToString(),
-                Description = (DBNull.Value == rdr["Description"]) ? null : rdr["Description"].ToString()
-            };
-            return option;
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = $"SELECT Id, ProductId, Name, Description " +
+                                  $"FROM ProductOption WHERE Id = '{id}'";
+
+                conn.Open();
+
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                {
+                    if (!reader.Read()) return null;
+
+                    var option = new ProductOption
+                    {
+                        Id = reader.GetGuid("Id"),
+                        ProductId = reader.GetGuid("ProductId"),
+                        Name = reader.GetString("Name"),
+                        Description = reader.GetString("Description"),
+                    };
+                    return option;
+                }
+            }
         }
 
         public void Create(ProductOption option)
         {
-            var conn = Helpers.NewConnection();
-            var cmd =
-                new SqlCommand(
-                    $"insert into productoption (id, productid, name, description) values ('{option.Id}', '{option.ProductId}', '{option.Name}', '{option.Description}')",
-                    conn);
+            using (var conn = Helpers.NewConnection())
+            {
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = $"INSERT INTO ProductOption (Id, ProductId, Name, Description) " +
+                                  $"VALUES ('{option.Id}', '{option.ProductId}', '{option.Name}', '{option.Description}')";
 
-            conn.Open();
-            cmd.ExecuteNonQuery();
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public void Update(ProductOption option)
         {
-            var conn = Helpers.NewConnection();
-            var cmd = new SqlCommand($"update productoption set name = '{option.Name}', description = '{option.Description}' where id = '{option.Id}'", conn);
+            using (var conn = Helpers.NewConnection())
+            {
+                var cmd = conn.CreateCommand();
+                cmd.CommandText =
+                    $"UPDATE ProductOption SET Name = '{option.Name}', Description = '{option.Description}' WHERE Id = '{option.Id}'";
 
-            conn.Open();
-            cmd.ExecuteNonQuery();
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public void Delete(Guid id)
         {
-            var conn = Helpers.NewConnection();
-            conn.Open();
-            var cmd = new SqlCommand($"delete from productoption where id = '{id}'", conn);
-            cmd.ExecuteReader();
+            using (var conn = Helpers.NewConnection())
+            {
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = $"DELETE FROM ProductOption WHERE Id = '{id}'";
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public ProductOptions GetByProductId(Guid productId)
         {
             var options =new ProductOptions();
             
-            var conn = Helpers.NewConnection();
-            var cmd = new SqlCommand($"select id from productoption where productid = '{productId}'", conn);
-            conn.Open();
-
-            var rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            using (var conn = Helpers.NewConnection())
             {
-                var id = Guid.Parse(rdr["id"].ToString());
-                var option = Get(id);
-                options.Items.Add(option);
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = $"SELECT Id FROM ProductOption WHERE productId = '{productId}'";
+
+                conn.Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var id = reader.GetGuid("Id");
+                        var product = Get(id);
+                        options.Items.Add(product);
+                    }
+                    return options;
+                }
             }
-            return options;
         }
     }
 }
