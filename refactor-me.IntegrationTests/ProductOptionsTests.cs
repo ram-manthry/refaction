@@ -143,5 +143,29 @@ namespace refactor_me.IntegrationTests
             //Assert
             actual.Should().Be(option);
         }
+
+        [Test]
+        public void UpdateOption_When_Option_Doesnt_Exist_Throws_HttpResponse_Exception()
+        {
+            //Arrange
+            var productId = Guid.NewGuid();
+            var optionId = Guid.NewGuid();
+            var option = new ProductOption(optionId)
+            {
+                Id = optionId,
+                Name = "Dummy Name 1",
+                Description = "Dummy Description 1",
+                ProductId = productId
+            };
+           
+            _productOptionIds.Add(optionId);
+
+            var expected = option;
+            expected.Name = "Dummy Name 1 updated";
+
+            //Act
+            _productsController.Invoking(controller => controller.UpdateOption(optionId, option))
+                .ShouldThrow<HttpResponseException>();
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.SqlClient;
-using Newtonsoft.Json;
 
 namespace refactor_me.Models
 {
@@ -39,39 +38,58 @@ namespace refactor_me.Models
             }
         }
 
-        [JsonIgnore]
-        public bool IsNew { get; }
-
         public ProductOption()
         {
             Id = Guid.NewGuid();
-            IsNew = true;
         }
 
         public ProductOption(Guid id)
         {
-            IsNew = true;
+            var option = Get(id);
+            if (option == null)
+                return;
+
+            Id = option.Id;
+            ProductId = option.ProductId;
+            Name = option.Name;
+            Description = option.Description;
+        }
+
+        public ProductOption Get(Guid id)
+        {
             var conn = Helpers.NewConnection();
             var cmd = new SqlCommand($"select * from productoption where id = '{id}'", conn);
             conn.Open();
 
             var rdr = cmd.ExecuteReader();
-            if (!rdr.Read())
-                return;
+            if (!rdr.Read()) return null;
 
-            IsNew = false;
-            Id = Guid.Parse(rdr["Id"].ToString());
-            ProductId = Guid.Parse(rdr["ProductId"].ToString());
-            Name = rdr["Name"].ToString();
-            Description = (DBNull.Value == rdr["Description"]) ? null : rdr["Description"].ToString();
+            var option = new ProductOption()
+            {
+                Id = Guid.Parse(rdr["Id"].ToString()),
+                ProductId = Guid.Parse(rdr["ProductId"].ToString()),
+                Name = rdr["Name"].ToString(),
+                Description = (DBNull.Value == rdr["Description"]) ? null : rdr["Description"].ToString()
+            };
+            return option;
         }
 
-        public void Save()
+        public void Create()
         {
             var conn = Helpers.NewConnection();
-            var cmd = IsNew ?
-                new SqlCommand($"insert into productoption (id, productid, name, description) values ('{Id}', '{ProductId}', '{Name}', '{Description}')", conn) :
-                new SqlCommand($"update productoption set name = '{Name}', description = '{Description}' where id = '{Id}'", conn);
+            var cmd =
+                new SqlCommand(
+                    $"insert into productoption (id, productid, name, description) values ('{Id}', '{ProductId}', '{Name}', '{Description}')",
+                    conn);
+
+            conn.Open();
+            cmd.ExecuteNonQuery();
+        }
+
+        public void Update()
+        {
+            var conn = Helpers.NewConnection();
+            var cmd = new SqlCommand($"update productoption set name = '{Name}', description = '{Description}' where id = '{Id}'", conn);
 
             conn.Open();
             cmd.ExecuteNonQuery();

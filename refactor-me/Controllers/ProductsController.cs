@@ -75,8 +75,8 @@ namespace refactor_me.Controllers
         [HttpGet]
         public ProductOption GetOption(Guid productId, Guid id)
         {
-            var option = new ProductOption(id);
-            if (option.IsNew)
+            var option = new ProductOption().Get(id);
+            if (option == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return option;
@@ -87,21 +87,21 @@ namespace refactor_me.Controllers
         public void CreateOption(Guid productId, ProductOption option)
         {
             option.ProductId = productId;
-            option.Save();
+            option.Create();
         }
 
         [Route("{productId}/options/{id}")]
         [HttpPut]
         public void UpdateOption(Guid id, ProductOption option)
         {
-            var orig = new ProductOption(id)
-            {
-                Name = option.Name,
-                Description = option.Description
-            };
+            var optionToUpdate = new ProductOption().Get(id);
+            if(optionToUpdate == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            if (!orig.IsNew)
-                orig.Save();
+            optionToUpdate.Name = option.Name;
+            optionToUpdate.Description = option.Description;
+            
+            optionToUpdate.Update();
         }
 
         [Route("{productId}/options/{id}")]
