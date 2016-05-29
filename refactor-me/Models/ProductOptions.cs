@@ -7,6 +7,7 @@ namespace refactor_me.Models
     public class ProductOptions
     {
         public List<ProductOption> Items { get; private set; }
+        private readonly ProductOptionRepository _productOptionRepository = new ProductOptionRepository();
 
         public ProductOptions()
         {
@@ -29,7 +30,7 @@ namespace refactor_me.Models
             while (rdr.Read())
             {
                 var id = Guid.Parse(rdr["id"].ToString());
-                var option = new ProductOption().Get(id);
+                var option = _productOptionRepository.Get(id);
                 Items.Add(option);
             }
         }

@@ -8,6 +8,12 @@ namespace refactor_me.Controllers
     [RoutePrefix("products")]
     public class ProductsController : ApiController
     {
+        private readonly ProductOptionRepository _productOptionRepository;
+        public ProductsController()
+        {
+            _productOptionRepository = new ProductOptionRepository();
+        }
+
         [Route]
         [HttpGet]
         public Products GetAll()
@@ -75,7 +81,7 @@ namespace refactor_me.Controllers
         [HttpGet]
         public ProductOption GetOption(Guid productId, Guid id)
         {
-            var option = new ProductOption().Get(id);
+            var option = _productOptionRepository.Get(id);
             if (option == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
@@ -87,29 +93,29 @@ namespace refactor_me.Controllers
         public void CreateOption(Guid productId, ProductOption option)
         {
             option.ProductId = productId;
-            option.Create(option);
+            _productOptionRepository.Create(option);
         }
 
         [Route("{productId}/options/{id}")]
         [HttpPut]
         public void UpdateOption(Guid id, ProductOption option)
         {
-            var optionToUpdate = new ProductOption().Get(id);
+            var optionToUpdate = _productOptionRepository.Get(id);
             if(optionToUpdate == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             optionToUpdate.Name = option.Name;
             optionToUpdate.Description = option.Description;
-            
-            optionToUpdate.Update(optionToUpdate);
+
+            _productOptionRepository.Update(optionToUpdate);
         }
 
         [Route("{productId}/options/{id}")]
         [HttpDelete]
         public void DeleteOption(Guid id)
         {
-            var optionToDelete = new ProductOption().Get(id);
-            optionToDelete.Delete(optionToDelete.Id);
+            var optionToDelete = _productOptionRepository.Get(id);
+            _productOptionRepository.Delete(optionToDelete.Id);
         }
     }
 }

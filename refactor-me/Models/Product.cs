@@ -45,6 +45,8 @@ namespace refactor_me.Models
         [JsonIgnore]
         public bool IsNew { get; }
 
+        private readonly ProductOptionRepository _productOptionRepository = new ProductOptionRepository();
+
         public Product()
         {
             Id = Guid.NewGuid();
@@ -84,7 +86,7 @@ namespace refactor_me.Models
         public void Delete()
         {
             foreach (var option in new ProductOptions(Id).Items)
-                option.Delete(option.Id);
+                _productOptionRepository.Delete(option.Id);
 
             var conn = Helpers.NewConnection();
             conn.Open();
