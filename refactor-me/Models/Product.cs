@@ -84,7 +84,7 @@ namespace refactor_me.Models
         public void Delete()
         {
             foreach (var option in new ProductOptions(Id).Items)
-                option.Delete();
+                option.Delete(option.Id);
 
             var conn = Helpers.NewConnection();
             conn.Open();

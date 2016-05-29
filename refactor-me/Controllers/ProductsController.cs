@@ -87,7 +87,7 @@ namespace refactor_me.Controllers
         public void CreateOption(Guid productId, ProductOption option)
         {
             option.ProductId = productId;
-            option.Create();
+            option.Create(option);
         }
 
         [Route("{productId}/options/{id}")]
@@ -101,7 +101,7 @@ namespace refactor_me.Controllers
             optionToUpdate.Name = option.Name;
             optionToUpdate.Description = option.Description;
             
-            optionToUpdate.Update();
+            optionToUpdate.Update(optionToUpdate);
         }
 
         [Route("{productId}/options/{id}")]
@@ -109,7 +109,7 @@ namespace refactor_me.Controllers
         public void DeleteOption(Guid id)
         {
             var optionToDelete = new ProductOption().Get(id);
-            optionToDelete.Delete();
+            optionToDelete.Delete(optionToDelete.Id);
         }
     }
 }

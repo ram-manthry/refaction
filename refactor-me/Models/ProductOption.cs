@@ -57,32 +57,32 @@ namespace refactor_me.Models
             return option;
         }
 
-        public void Create()
+        public void Create(ProductOption option)
         {
             var conn = Helpers.NewConnection();
             var cmd =
                 new SqlCommand(
-                    $"insert into productoption (id, productid, name, description) values ('{Id}', '{ProductId}', '{Name}', '{Description}')",
+                    $"insert into productoption (id, productid, name, description) values ('{option.Id}', '{option.ProductId}', '{option.Name}', '{option.Description}')",
                     conn);
 
             conn.Open();
             cmd.ExecuteNonQuery();
         }
 
-        public void Update()
+        public void Update(ProductOption option)
         {
             var conn = Helpers.NewConnection();
-            var cmd = new SqlCommand($"update productoption set name = '{Name}', description = '{Description}' where id = '{Id}'", conn);
+            var cmd = new SqlCommand($"update productoption set name = '{option.Name}', description = '{option.Description}' where id = '{option.Id}'", conn);
 
             conn.Open();
             cmd.ExecuteNonQuery();
         }
 
-        public void Delete()
+        public void Delete(Guid id)
         {
             var conn = Helpers.NewConnection();
             conn.Open();
-            var cmd = new SqlCommand($"delete from productoption where id = '{Id}'", conn);
+            var cmd = new SqlCommand($"delete from productoption where id = '{id}'", conn);
             cmd.ExecuteReader();
         }
     }
