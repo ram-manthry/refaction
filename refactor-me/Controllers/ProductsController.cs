@@ -11,11 +11,17 @@ namespace refactor_me.Controllers
     {
         private readonly IProductRepository _productRepository;
         private readonly IProductOptionRepository _productOptionRepository;
-        
+
         public ProductsController()
         {
             _productOptionRepository = new ProductOptionRepository();
             _productRepository = new ProductRepository(_productOptionRepository);
+        }
+
+        public ProductsController(IProductRepository productRepository, IProductOptionRepository productOptionRepository)
+        {
+            _productRepository = productRepository;
+            _productOptionRepository = productOptionRepository;
         }
 
         [Route]

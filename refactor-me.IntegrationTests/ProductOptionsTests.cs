@@ -4,6 +4,7 @@ using System.Web.Http;
 using FluentAssertions;
 using NUnit.Framework;
 using refactor_me.Controllers;
+using refactor_me.DataAccess;
 using refactor_me.Models;
 
 namespace refactor_me.IntegrationTests
@@ -14,7 +15,9 @@ namespace refactor_me.IntegrationTests
         [SetUp]
         public void SetUp()
         {
-            _productsController = new ProductsController();
+            var productOptionRepository = new ProductOptionRepository();
+            var productRepository = new ProductRepository(productOptionRepository);
+            _productsController = new ProductsController(productRepository, productOptionRepository);
             _productOptionIds = new List<Guid>();
         }
 

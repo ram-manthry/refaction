@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Http;
 using FluentAssertions;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 using refactor_me.Controllers;
+using refactor_me.DataAccess;
 using refactor_me.Models;
-
 
 namespace refactor_me.IntegrationTests
 {
@@ -18,13 +15,12 @@ namespace refactor_me.IntegrationTests
         [SetUp]
         public void SetUp()
         {
-            _productsController = new ProductsController();
+            var productOptionRepository = new ProductOptionRepository();
+            var productRepository = new ProductRepository(productOptionRepository);
+            _productsController = new ProductsController(productRepository, productOptionRepository);
             _productIds = new List<Guid>();
         }
 
-        private ProductsController _productsController;
-        private List<Guid> _productIds;
-       
         [TearDown]
         public void TearDown()
         {
@@ -34,12 +30,15 @@ namespace refactor_me.IntegrationTests
             }
         }
 
+        private ProductsController _productsController;
+        private List<Guid> _productIds;
+
         [Test]
         public void Create_And_GetProduct()
         {
             //Arrange
             var productId = Guid.NewGuid();
-            var expected = new Product()
+            var expected = new Product
             {
                 Id = productId,
                 Name = "Dummy Name 1",
@@ -53,7 +52,7 @@ namespace refactor_me.IntegrationTests
 
             //Act
             var actual = _productsController.GetProduct(productId);
-            
+
             //Assert
             actual.Should().Be(expected);
         }
@@ -63,7 +62,7 @@ namespace refactor_me.IntegrationTests
         {
             //Arrange
             var productId = Guid.NewGuid();
-            var product = new Product()
+            var product = new Product
             {
                 Id = productId,
                 Name = "Dummy Name 1",
@@ -89,7 +88,7 @@ namespace refactor_me.IntegrationTests
             //Arrange
             var productId1 = Guid.NewGuid();
             var prouctId2 = Guid.NewGuid();
-            var product1 = new Product()
+            var product1 = new Product
             {
                 Id = productId1,
                 Name = "Dummy Name 1",
@@ -97,7 +96,7 @@ namespace refactor_me.IntegrationTests
                 Price = 123.45M,
                 DeliveryPrice = 67.89M
             };
-            var product2 = new Product()
+            var product2 = new Product
             {
                 Id = prouctId2,
                 Name = "Dummy Name 2",
@@ -110,7 +109,7 @@ namespace refactor_me.IntegrationTests
 
             _productIds.Add(productId1);
             _productIds.Add(prouctId2);
-            
+
             //Act
             var actual = _productsController.GetAll();
 
@@ -124,7 +123,7 @@ namespace refactor_me.IntegrationTests
         {
             //Arrange
             var productId = Guid.NewGuid();
-            var expected = new Product()
+            var expected = new Product
             {
                 Id = productId,
                 Name = productId.ToString(),
@@ -148,7 +147,7 @@ namespace refactor_me.IntegrationTests
         {
             //Arrange
             var productId = Guid.NewGuid();
-            var product = new Product()
+            var product = new Product
             {
                 Id = productId,
                 Name = "Dummy Name 1",
@@ -164,7 +163,7 @@ namespace refactor_me.IntegrationTests
             _productIds.Add(productId);
 
             //Act
-            _productsController.Update(productId,expected);
+            _productsController.Update(productId, expected);
             var actual = _productsController.GetProduct(productId);
 
             //Assert
