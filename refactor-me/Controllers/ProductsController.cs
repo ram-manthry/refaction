@@ -9,13 +9,13 @@ namespace refactor_me.Controllers
     [RoutePrefix("products")]
     public class ProductsController : ApiController
     {
-        private readonly ProductRepository _productRepository;
-        private readonly ProductOptionRepository _productOptionRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IProductOptionRepository _productOptionRepository;
         
         public ProductsController()
         {
-            _productRepository = new ProductRepository();
             _productOptionRepository = new ProductOptionRepository();
+            _productRepository = new ProductRepository(_productOptionRepository);
         }
 
         [Route]

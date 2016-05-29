@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers.cs" />
+    <Compile Include="IProductOptionRepository.cs" />
+    <Compile Include="IProductRepository.cs" />
     <Compile Include="ProductOptionRepository.cs" />
     <Compile Include="ProductRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

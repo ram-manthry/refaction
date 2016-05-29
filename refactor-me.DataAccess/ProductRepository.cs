@@ -4,9 +4,14 @@ using refactor_me.Models;
 
 namespace refactor_me.DataAccess
 {
-    public class ProductRepository
+    public class ProductRepository : IProductRepository
     {
-        private readonly ProductOptionRepository _productOptionRepository = new ProductOptionRepository();
+        private readonly IProductOptionRepository _productOptionRepository;
+
+        public ProductRepository(IProductOptionRepository productOptionRepository)
+        {
+            _productOptionRepository = productOptionRepository;
+        }
 
         public Product Get(Guid id)
         {
